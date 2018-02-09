@@ -9,7 +9,7 @@ local opts = {
 }
 
 local oidc = require("resty.openidc")
-local res, err
+local res, err, target_url
 
 local path = ngx.var.request_uri
 path = path:match("(.-)%?") or path
@@ -37,7 +37,7 @@ if path == os.getenv("OID_AUTH_PATH") then
 end
 
 -- call authenticate for OpenID Connect user authentication
-res, err = oidc.authenticate(opts)
+res, err, target_url = oidc.authenticate(opts)
 
 if err then
     ngx.status = 500
@@ -45,4 +45,13 @@ if err then
 
     ngx.say("There was an error while logging in: " .. err)
     ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
+end
+
+local rd = target_url:match(".-%?rd=([^&]*)")
+if res and rd and rd ~= "" then
+    ngx.status = 302
+    ngx.header.content_type = 'text/html';
+    ngx.header["Location"] = rd
+    ngx.say("Found: " .. rd)
+    ngx.exit(ngx.HTTP_MOVED_TEMPORARILY)
 end
