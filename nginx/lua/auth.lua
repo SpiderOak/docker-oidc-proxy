@@ -1,5 +1,6 @@
 local opts = {
     redirect_uri_path = os.getenv("OID_REDIRECT_PATH") or "/redirect_uri",
+    logout_path = os.getenv("OID_LOGOUT_PATH"),
     discovery = os.getenv("OID_DISCOVERY"),
     client_id = os.getenv("OID_CLIENT_ID"),
     client_secret = os.getenv("OID_CLIENT_SECRET"),
