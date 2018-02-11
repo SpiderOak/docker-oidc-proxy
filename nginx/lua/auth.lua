@@ -4,8 +4,8 @@ local opts = {
     discovery = os.getenv("OID_DISCOVERY"),
     client_id = os.getenv("OID_CLIENT_ID"),
     client_secret = os.getenv("OID_CLIENT_SECRET"),
-    token_endpoint_auth_method = os.getenv("OIDC_AUTH_METHOD") or "client_secret_basic",
-    scope = os.getenv("OIDC_AUTH_SCOPE") or "openid",
+    token_endpoint_auth_method = os.getenv("OID_AUTH_METHOD") or "client_secret_basic",
+    scope = os.getenv("OID_AUTH_SCOPE") or "openid",
     iat_slack = 600,
 }
 
