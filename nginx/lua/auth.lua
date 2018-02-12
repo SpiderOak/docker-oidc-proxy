@@ -38,14 +38,8 @@ if unauth_action == "pass" then
     ngx.status = 202
     ngx.header.content_type = 'text/html';
 
-    local sub_header = os.getenv("OID_AUTH_SUB_HEADER") or "X-SUB"
-    if sub_header then
-        ngx.header[sub_header] = res.id_token.sub
-    end
-
-    local email_header = os.getenv("OID_AUTH_EMAIL_HEADER") or "X-EMAIL"
-    if email_header then
-        ngx.header[email_header] = res.id_token.email
+    for k, h in string.gmatch(os.getenv("OID_ID_TOKEN_HEADERS"), "([^:%s]+):([^,%s]+)") do
+        ngx.header[h] = res.id_token[k]
     end
 
     ngx.say("Accepted")
