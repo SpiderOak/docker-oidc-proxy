@@ -38,7 +38,7 @@ if unauth_action == "pass" then
     ngx.status = 202
     ngx.header.content_type = 'text/html';
 
-    for k, h in string.gmatch(os.getenv("OID_ID_TOKEN_HEADERS"), "([^:%s]+):([^,%s]+)") do
+    for k, h in string.gmatch(os.getenv("OID_ID_TOKEN_HEADERS"), "([^,%s:]+):([^,%s]+)") do
         ngx.header[h] = res.id_token[k]
     end
 
