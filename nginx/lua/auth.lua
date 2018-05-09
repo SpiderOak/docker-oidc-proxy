@@ -10,6 +10,7 @@ local opts = {
 }
 
 local oidc = require("resty.openidc")
+local cjson = require("cjson")
 local res, err, target_url
 
 target_url = ngx.var.request_uri
@@ -45,4 +46,11 @@ if unauth_action == "pass" then
 
     ngx.say("Accepted")
     ngx.exit(ngx.HTTP_ACCEPTED)
+end
+
+if target_url == os.getenv("OID_DEBUG_PATH") then
+    ngx.status = 200
+    ngx.header.content_type = 'text/plain';
+    ngx.say(cjson.encode(res.id_token))
+    ngx.exit(ngx.HTTP_OK)
 end
