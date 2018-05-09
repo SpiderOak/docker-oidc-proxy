@@ -15,9 +15,10 @@ local res, err, target_url
 target_url = ngx.var.request_uri
 local path = target_url:match("(.-)%?") or target_url
 local unauth_action = (path == os.getenv("OID_AUTH_PATH")) and "pass" or nil
+local rd = target_url:match(".-%?rd=([^&]*)")
 
 -- call authenticate for OpenID Connect user authentication
-res, err = oidc.authenticate(opts, target_url, unauth_action)
+res, err = oidc.authenticate(opts, rd or target_url, unauth_action)
 
 if err then
     ngx.status = 500
@@ -44,13 +45,4 @@ if unauth_action == "pass" then
 
     ngx.say("Accepted")
     ngx.exit(ngx.HTTP_ACCEPTED)
-end
-
-local rd = target_url:match(".-%?rd=([^&]*)")
-if res and rd and rd ~= "" then
-    ngx.status = 302
-    ngx.header.content_type = 'text/html';
-    ngx.header["Location"] = rd
-    ngx.say("Found: " .. rd)
-    ngx.exit(ngx.HTTP_MOVED_TEMPORARILY)
 end
