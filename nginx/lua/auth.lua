@@ -41,7 +41,11 @@ if unauth_action == "pass" then
     ngx.header.content_type = 'text/html';
 
     for k, h in string.gmatch(os.getenv("OID_ID_TOKEN_HEADERS"), "([^,%s:]+):([^,%s]+)") do
-        ngx.header[h] = res.id_token[k]
+        if type(res.id_token[k]) == "table" then
+            ngx.header[h] = table.concat(res.id_token[k], ", ")
+        else
+            ngx.header[h] = res.id_token[k]
+        end
     end
 
     ngx.say("Accepted")
